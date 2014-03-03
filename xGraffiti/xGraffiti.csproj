@@ -1,0 +1,219 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{82D4B4D1-F38F-4859-AA1E-D533D7268CB4}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>xGraffiti</RootNamespace>
+    <AssemblyName>xGraffiti</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>x.icon.ico</ApplicationIcon>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Coding4Fun.Kinect.Wpf">
+      <HintPath>..\packages\Coding4Fun.Kinect.Wpf.1.5.0\lib\Coding4Fun.Kinect.Wpf.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Expression.Drawing">
+      <HintPath>..\packages\Coding4Fun.Kinect.Wpf.1.5.0\lib\Microsoft.Expression.Drawing.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Kinect, Version=1.7.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="Microsoft.Kinect.Toolkit.Interaction, Version=1.7.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Program Files\Microsoft SDKs\Kinect\Developer Toolkit v1.7.0\Assemblies\Microsoft.Kinect.Toolkit.Interaction.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Speech, Version=11.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Program Files\Microsoft SDKs\Kinect\Developer Toolkit v1.7.0\Samples\bin\Microsoft.Speech.dll</HintPath>
+    </Reference>
+    <Reference Include="PresentationFramework" />
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Speech" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Xaml">
+      <RequiredTargetFramework>4.0</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="WindowsBase" />
+    <Reference Include="PresentationCore" />
+  </ItemGroup>
+  <ItemGroup>
+    <ApplicationDefinition Include="App.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </ApplicationDefinition>
+    <Compile Include="customStroke.cs" />
+    <Compile Include="KinectAdapter.cs" />
+    <Compile Include="PaintingCanvas.cs" />
+    <Compile Include="SetCurson.cs" />
+    <Compile Include="SkeletonViewer.xaml.cs">
+      <DependentUpon>SkeletonViewer.xaml</DependentUpon>
+    </Compile>
+    <Page Include="MainWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="App.xaml.cs">
+      <DependentUpon>App.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MainWindow.xaml.cs">
+      <DependentUpon>MainWindow.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Page Include="SkeletonViewer.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Properties\AssemblyInfo.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <None Include="packages.config" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <AppDesigner Include="Properties\" />
+    <Resource Include="resource\ccCabinSketch-Regular.otf" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="resource\pointer.cur" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="resource\pointer2.cur" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="resource\BColor_black.png" />
+    <Resource Include="resource\BColor_red.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="resource\bg1.jpg" />
+    <Resource Include="resource\bg2.jpg" />
+    <Resource Include="resource\bg3.jpg" />
+    <Resource Include="resource\bg4.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="resource\Color_black.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="resource\Color_red.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="resource\Color_blue.png" />
+    <Resource Include="resource\Color_green.png" />
+    <Resource Include="resource\Color_yellow.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="resource\BColor_blue.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="resource\BColor_yellow.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="resource\BColor_white.png" />
+    <Resource Include="resource\Color_white.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="resource\BColor_green.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="resource\helpMenu.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="resource\welcome.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="resource\selected_pointer.png" />
+    <Resource Include="resource\unselected_pointer.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="resource\selected_pointer.cur" />
+    <Resource Include="resource\unselected_pointer.cur" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="resource\mask.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="resource\短促声音.mp3" />
+    <Resource Include="resource\短促声音2.mp3" />
+    <Resource Include="resource\长声音.mp3" />
+    <Resource Include="resource\长声音2.mp3" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="resource\长声音.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="resource\x.icon.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="x.icon.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\packages\Microsoft.Kinect.Toolkit.Controls\Microsoft.Kinect.Toolkit.Controls.csproj">
+      <Project>{4508C4D1-85BB-4F3F-9E3B-CC93D231C65D}</Project>
+      <Name>Microsoft.Kinect.Toolkit.Controls</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\packages\Microsoft.Kinect.Toolkit\Microsoft.Kinect.Toolkit.csproj">
+      <Project>{C6F9C31B-6130-4443-A5CC-EF0664552ECD}</Project>
+      <Name>Microsoft.Kinect.Toolkit</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

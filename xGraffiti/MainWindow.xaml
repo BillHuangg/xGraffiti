@@ -1,0 +1,30 @@
+﻿<Window x:Class="xGraffiti.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:c="clr-namespace:xGraffiti"
+        Title="xGraffiti" Loaded="Window_Loaded" Height="1080" Width="1920"  WindowStyle="None" WindowState="Maximized"   xmlns:k="http://schemas.microsoft.com/kinect/2013">
+    <Viewbox Stretch="Fill">
+        <Grid Name="layout" >
+            <InkCanvas Name="Ink" Background="Beige"  Height="1050" HorizontalAlignment="Left" VerticalAlignment="Top" Width="1680" Margin="0,0,0,0" UseCustomCursor="True" Cursor="Hand" 
+                   EditingMode="None" PreviewMouseMove="inkcanvas_MouseMove" PreviewMouseUp="inkcanvas_MouseUp" PreviewMouseDown="inkcanvas_MouseDown" 
+                   StrokeErased="inkcanvas_StrokeErased">
+                <Image Name="background" Height="1050" Width="1680" Source="resource/bg4.jpg" Stretch="Fill"/>
+            </InkCanvas>
+
+            <Canvas  Height="1080" Width="1920" Name="buttonLayer"  >
+                <Image Canvas.Left="880" Canvas.Top="0" Height="120" Name="DepthImage" Stretch="Fill" Width="160" />
+                
+                <Image Source="resource/helpMenu.jpg"  Height="785" Name="colorTable"  Width="1292" Visibility="Hidden" />
+                
+                <Image Source="resource/Color_black.png" Name="colorForDisplay" Height="100"  Stretch="Fill" Width="100" Margin="0,950,0,0" />
+                <Image Source="resource/mask.png" Name="Mask" Height="100"  Stretch="Fill" Width="387" Margin="0,950,0,0" Canvas.Left="1293" Canvas.Top="0" Opacity="0.5"/>
+                <Label FontFamily="CabinSketch" Content="Instruction" FontSize="60" Height="87" Name="Instruction" Width="341" Margin="1098,933,12,0" Foreground="White" Canvas.Left="239" Canvas.Top="30" Opacity="0.8" HorizontalContentAlignment="Center"/>
+                
+            </Canvas>
+            <Canvas Name="welcomeLayer">
+                <Image Name="welcome" Source="resource/welcome.jpg" Height="1080" Width="1920" Stretch="Fill"/>
+                <Label Margin="200,720,0,0" FontFamily="CabinSketch"  Content="Stand in front of Kinect" FontSize="60" Height="105" Name="tips" Width="975"  />
+            </Canvas>
+        </Grid>
+    </Viewbox>
+</Window>
