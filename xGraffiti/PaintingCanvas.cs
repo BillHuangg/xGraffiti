@@ -78,20 +78,25 @@ namespace xGraffiti
 
 
         private DrawingAttributes canvasAttributes;
+        private int currentBackgroundNum = 1;
+        private int TotalNumberOfBackground = 3;
 
+        private MainWindow _windowUI;
         public PaintingCanvas()
         {
             //默认构造函数;
         }
 
 
-        public PaintingCanvas(InkCanvas _canvas)
+        public PaintingCanvas(MainWindow window, InkCanvas _canvas)
         {
+            _windowUI = window;
+
 
             this._myCanvas = _canvas;
             //背景色
-            this.backgroundColor = Brushes.Gray;
-            this._myCanvas.Background = this.backgroundColor;
+            //this.backgroundColor = Brushes.Gray;
+            //this._myCanvas.Background = this.backgroundColor;
 
 
             //改变笔触以及颜色(重载
@@ -106,7 +111,7 @@ namespace xGraffiti
 
             this._myCanvas.UseCustomCursor = true;
             //Cursor对象不直接支持URI资源语法，为应用程序添加光标文件作为资源，然后将该资源作为可以使用于Cursor对象的数据流返回，通过使用Application.GetResourceStream()方式；
-            StreamResourceInfo sri = Application.GetResourceStream(new Uri("resource/unselected_pointer.cur", UriKind.Relative));
+            StreamResourceInfo sri = Application.GetResourceStream(new Uri(@"pack://application:,,,/Resources/PointerImage/unselected_pointer.cur", UriKind.RelativeOrAbsolute));
             Cursor customCursor = new Cursor(sri.Stream);
             this._myCanvas.Cursor = customCursor;
             //颜色初值
@@ -222,6 +227,21 @@ namespace xGraffiti
             }
 
         }
+
+        public void ChangeToNextBackground(bool isNext)
+        {
+            if(isNext)
+            {
+                currentBackgroundNum=(currentBackgroundNum+1)%TotalNumberOfBackground;
+            }
+            else
+            {
+                currentBackgroundNum=(currentBackgroundNum-1+TotalNumberOfBackground)%TotalNumberOfBackground;
+            }
+            Uri uri = new Uri("pack://application:,,,/Resources/BGImage/" + currentBackgroundNum + ".png",UriKind.RelativeOrAbsolute );
+            _windowUI.background.Source=new BitmapImage(uri);
+        }
+
         //public void eraser()
         //{
         //    //橡皮

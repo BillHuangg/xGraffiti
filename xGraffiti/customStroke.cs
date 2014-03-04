@@ -44,9 +44,8 @@ namespace xGraffiti
             originalDa.Height = this.size;
             //ImageBrush brush = new ImageBrush(new BitmapImage(new Uri(@"test3.png", UriKind.Relative)));
 
-            string path = "..\\..\\resource\\BColor_" + color + ".png";
-            //string path = "resource//BColor_" + color + ".png";//直接连到debug中
-            ImageBrush brush = new ImageBrush(new BitmapImage(new Uri(path, UriKind.Relative)));
+            string path = "pack://application:,,,/Resources/ColorBrush/BColor_" + color + ".png";
+            ImageBrush brush = new ImageBrush(new BitmapImage(new Uri(path, UriKind.RelativeOrAbsolute)));
             brush.Freeze();
             drawingContext.DrawGeometry(brush, null, this.GetGeometry(originalDa));
 

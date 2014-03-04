@@ -70,6 +70,7 @@ namespace xGraffiti
         /// </summary>
         private SpeechRecognitionEngine _sre;
         private KinectAudioSource _source;
+        private const string SpeechPrefixWord = "kinect";
         /// <summary>
         /// 深度流
         /// </summary>
@@ -79,12 +80,12 @@ namespace xGraffiti
         /// <summary>
         /// 定义画布类
         /// </summary>
-        PaintingCanvas DrawCanvas;
+        PaintingCanvas drawCanvas;
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             //赋值
-            DrawCanvas = new PaintingCanvas(Ink);
+            drawCanvas = new PaintingCanvas(this,this.Ink);
         }
         public MainWindow()
         {
@@ -445,14 +446,15 @@ namespace xGraffiti
         /// <param name="ri"></param>
         private void CreateGrammars(RecognizerInfo ri)
         {
+            
             //color
             var colors = new Choices();
-            colors.Add("yellow");
-            colors.Add("white");
-            colors.Add("blue");
-            colors.Add("green");
-            colors.Add("red");
-            colors.Add("black");
+            colors.Add("kinect yellow");
+            colors.Add(SpeechPrefixWord +" "+ "white");
+            colors.Add(SpeechPrefixWord + " " + "blue");
+            colors.Add(SpeechPrefixWord + " " + "green");
+            colors.Add(SpeechPrefixWord + " " + "red");
+            colors.Add(SpeechPrefixWord + " " + "black");
             var gb = new GrammarBuilder();
             gb.Culture = ri.Culture;
             gb.Append(colors);
@@ -461,18 +463,20 @@ namespace xGraffiti
 
             //instruction
             var instructions = new Choices();
-            instructions.Add("save");
-            instructions.Add("reset");
-            instructions.Add("undo");
-            instructions.Add("load");
-            instructions.Add("stop");
-            instructions.Add("paint");
-            instructions.Add("close");
-            instructions.Add("help");
-            instructions.Add("stroke decrease");
-            instructions.Add("stroke increase");
-            instructions.Add("stroke reset");
-            instructions.Add("quit application");
+            instructions.Add(SpeechPrefixWord + " " + "next");
+            instructions.Add(SpeechPrefixWord + " " + "previous");
+            instructions.Add(SpeechPrefixWord + " " + "save");
+            instructions.Add(SpeechPrefixWord + " " + "reset");
+            instructions.Add(SpeechPrefixWord + " " + "undo");
+
+            instructions.Add(SpeechPrefixWord + " " + "stop");
+            instructions.Add(SpeechPrefixWord + " " + "paint");
+            instructions.Add(SpeechPrefixWord + " " + "close");
+            instructions.Add(SpeechPrefixWord + " " + "help");
+            instructions.Add(SpeechPrefixWord + " " + "stroke decrease");
+            instructions.Add(SpeechPrefixWord + " " + "stroke increase");
+            instructions.Add(SpeechPrefixWord + " " + "stroke reset");
+            instructions.Add(SpeechPrefixWord + " " + "quit application");
             var instructElement = new GrammarBuilder { Culture = ri.Culture };
             instructElement.Append(instructions);
             var instruct = new Grammar(instructElement);
@@ -487,133 +491,122 @@ namespace xGraffiti
         {
             var result = e.Result;
             //指令判断
-            //Confidence = Math.Round(result.Confidence, 2).ToString();
-            //if (result.Confidence < 95 && result.Words[0].Text == "quit" && result.Words[1].Text == "application")
-            //{
-            //    this.Close();
-            //}
-            if (result.Confidence > 0.7 && result.Words[0].Text == "quit" && result.Words[1].Text == "application")
+            
+            if (result.Words[0].Text == SpeechPrefixWord)
             {
-                this.Close();
-            }
-            else if (result.Confidence >= 0.5)
-            {
-                var instructionString = result.Words[0].Text;
-                string path; //建立图片颜色索引地址
-                // Color color;
-                switch (instructionString)
+                if (result.Confidence > 0.5 && result.Words[1].Text == "quit" && result.Words[2].Text == "application")
                 {
-                    //颜色
-                    case "yellow":
-                        DrawCanvas.colorName = instructionString;
-                        path = "..\\..\\resource\\Color_" + instructionString + ".png";
-                        colorForDisplay.Source = new BitmapImage(new Uri(path, UriKind.Relative));
-                        break;
-                    case "white":
-                        DrawCanvas.colorName = instructionString;
-                        path = "..\\..\\resource\\Color_" + instructionString + ".png";
-                        colorForDisplay.Source = new BitmapImage(new Uri(path, UriKind.Relative));
-                        break;
-                    case "blue":
-                        DrawCanvas.colorName = instructionString;
-                        path = "..\\..\\resource\\Color_" + instructionString + ".png";
-                        colorForDisplay.Source = new BitmapImage(new Uri(path, UriKind.Relative));
-                        break;
-                    case "green":
-                        DrawCanvas.colorName = instructionString;
-                        path = "..\\..\\resource\\Color_" + instructionString + ".png";
-                        colorForDisplay.Source = new BitmapImage(new Uri(path, UriKind.Relative));
-                        break;
-                    case "red":
-                        DrawCanvas.colorName = instructionString;
-                        path = "..\\..\\resource\\Color_" + instructionString + ".png";
-                        colorForDisplay.Source = new BitmapImage(new Uri(path, UriKind.Relative));
-                        break;
-                    case "black":
-                        DrawCanvas.colorName = instructionString;
-                        path = "..\\..\\resource\\Color_" + instructionString + ".png";
-                        colorForDisplay.Source = new BitmapImage(new Uri(path, UriKind.Relative));
-                        break;
+                    this.Close();
+                }
+                else if (result.Confidence >= 0.2)
+                {
+                    string instructionString = (string)result.Words[1].Text;
+                    string path; //建立图片颜色索引地址
+
+                    // Color color;
+                    switch (instructionString)
+                    {
+                        //颜色
+                        case "yellow":
+                        case "white":
+                        case "blue":
+                        case "green":
+                        case "red":
+                            drawCanvas.colorName = instructionString;
+                            path = "pack://application:,,,/Resources/ColorDisplayImage/Color_" + instructionString + ".png";
+                            colorForDisplay.Source = new BitmapImage(new Uri(path, UriKind.RelativeOrAbsolute));
+                            break;
 
                         //指令
-                    case "save":
-                        Instruction.Content = instructionString;
-                        DrawCanvas.save();
-                        break;
-                    case "reset":
-                        Instruction.Content = instructionString;
-                        DrawCanvas.reset();
-                        theNumberOfStrokIndex = 0;
-                        break;
-                    case "undo":
-                        if (!IsDrawing)
-                        {
+                        case "next":
                             Instruction.Content = instructionString;
-                            DrawCanvas.undo();
-                            if(DrawCanvas.strokeList.Count>=1)
-                            {
-                                theNumberOfStrokIndex = DrawCanvas.strokeList[DrawCanvas.strokeList.Count - 1];
-                            }
-                            else if (DrawCanvas.strokeList.Count == 0)
-                            {
-                                theNumberOfStrokIndex = 0;
-                            }
-                        }
-                        break;
-                    case "load":
-                        Instruction.Content = instructionString;
-                        DrawCanvas.load();
-                        break;
-                    case "stop":
-                        Instruction.Content = instructionString;
-                        IsStopping = true;
-                        //DrawCanvas.eraser();
-                        break;
-                    case "paint":
-                        Instruction.Content = instructionString;
-                        IsStopping = false;
-                        //DrawCanvas.paint();
-                        break;
-                    case "help":
-                        Instruction.Content = instructionString;
-                        colorTable.Visibility = Visibility.Visible;
-                        break;
-                    case "close":
-                        if (colorTable.Visibility == Visibility.Visible)
-                        {
-                            Instruction.Content = result.Words[0].Text;
-                            colorTable.Visibility = Visibility.Hidden;
-                        }
-                        break;
-                    case "stroke":
-                        string next = result.Words[1].Text;
-                        switch (next)
-                        {
-                            case "decrease":
-                                Instruction.Content = instructionString + " " + next;
-                                if (this.DrawCanvas.penSize > 45)
-                                {
-                                    this.DrawCanvas.penSize -= 40;
-                                }
-                                break;
-                            case "increase":
-                                Instruction.Content = instructionString + " " + next;
-                                if (this.DrawCanvas.penSize < 300)
-                                {
-                                    this.DrawCanvas.penSize += 40;
-                                }
-                                break;
-                            case "reset":
+                            drawCanvas.ChangeToNextBackground(true);
+                            break;
+                        case "previous":
+                            Instruction.Content = instructionString;
+                            drawCanvas.ChangeToNextBackground(false);
+                            break;
 
-                                Instruction.Content = result.Words[0].Text + " " + result.Words[1].Text;
-                                this.DrawCanvas.penSize = 100;
-                                break;
-                            default:
-                                break;
-                        }
-                        break;
-                    default:
-                        return;
+                        case "save":
+                            Instruction.Content = instructionString;
+                            drawCanvas.save();
+                            //save the whole picture not strokes
+                            break;
+                        case "reset":
+                            Instruction.Content = instructionString;
+                            drawCanvas.reset();
+                            theNumberOfStrokIndex = 0;
+                            break;
+                        case "undo":
+                            if (!IsDrawing)
+                            {
+                                Instruction.Content = instructionString;
+                                drawCanvas.undo();
+                                if (drawCanvas.strokeList.Count >= 1)
+                                {
+                                    theNumberOfStrokIndex = drawCanvas.strokeList[drawCanvas.strokeList.Count - 1];
+                                }
+                                else if (drawCanvas.strokeList.Count == 0)
+                                {
+                                    theNumberOfStrokIndex = 0;
+                                }
+                            }
+                            break;
+                        case "load":
+                            //Instruction.Content = instructionString;
+                            //drawCanvas.load();
+                            break;
+                        case "stop":
+                            Instruction.Content = instructionString;
+                            IsStopping = true;
+                            //DrawCanvas.eraser();
+                            break;
+                        case "paint":
+                            Instruction.Content = instructionString;
+                            IsStopping = false;
+                            //DrawCanvas.paint();
+                            break;
+                        case "help":
+                            Instruction.Content = instructionString;
+                            colorTable.Visibility = Visibility.Visible;
+                            break;
+                        case "close":
+                            if (colorTable.Visibility == Visibility.Visible)
+                            {
+                                Instruction.Content = result.Words[0].Text;
+                                colorTable.Visibility = Visibility.Hidden;
+                            }
+                            break;
+                        case "stroke":
+                            string next = result.Words[2].Text;
+                            switch (next)
+                            {
+                                case "decrease":
+                                    Instruction.Content = instructionString + " " + next;
+                                    if (this.drawCanvas.penSize > 45)
+                                    {
+                                        this.drawCanvas.penSize -= 40;
+                                    }
+                                    break;
+                                case "increase":
+                                    Instruction.Content = instructionString + " " + next;
+                                    if (this.drawCanvas.penSize < 300)
+                                    {
+                                        this.drawCanvas.penSize += 40;
+                                    }
+                                    break;
+                                case "reset":
+
+                                    Instruction.Content = result.Words[0].Text + " " + result.Words[1].Text;
+                                    this.drawCanvas.penSize = 100;
+                                    break;
+                                default:
+                                    break;
+                            }
+                            break;
+                        default:
+                            return;
+                    }
                 }
             }
         }
@@ -721,7 +714,7 @@ namespace xGraffiti
         bool IsStopping = false;
         private void inkcanvas_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            if (DrawCanvas.myCanvas.EditingMode == InkCanvasEditingMode.None)
+            if (drawCanvas.myCanvas.EditingMode == InkCanvasEditingMode.None)
             {
                 if (!IsStopping)
                 {
@@ -730,9 +723,9 @@ namespace xGraffiti
                
                 previousPoint = e.GetPosition((IInputElement)sender);
 
-                StreamResourceInfo sri = Application.GetResourceStream(new Uri("resource/selected_pointer.cur", UriKind.Relative));
+                StreamResourceInfo sri = Application.GetResourceStream(new Uri("pack://application:,,,/Resources/PointerImage/selected_pointer.cur", UriKind.RelativeOrAbsolute));
                 Cursor customCursor = new Cursor(sri.Stream);
-                DrawCanvas.myCanvas.Cursor = customCursor;
+                drawCanvas.myCanvas.Cursor = customCursor;
             }
         }
 
@@ -756,8 +749,8 @@ namespace xGraffiti
 
                     StylusPointCollection pts = new StylusPointCollection();
                     pts.Add(new StylusPoint(x, y));
-                    st = new customStroke(pts,DrawCanvas);
-                    DrawCanvas.myCanvas.Strokes.Add(st);
+                    st = new customStroke(pts,drawCanvas);
+                    drawCanvas.myCanvas.Strokes.Add(st);
 
                     theNumberOfStrokIndex++;
                     
@@ -767,53 +760,25 @@ namespace xGraffiti
 
         private void inkcanvas_MouseUp(object sender, MouseButtonEventArgs e)
         {
-            if (DrawCanvas.myCanvas.EditingMode == InkCanvasEditingMode.None)
+            if (drawCanvas.myCanvas.EditingMode == InkCanvasEditingMode.None)
             {
                 if (st != null)
                 {
-                    DrawCanvas.myCanvas.Strokes.Remove(st);
-                    DrawCanvas.myCanvas.Strokes.Add(st.Clone());
+                    drawCanvas.myCanvas.Strokes.Remove(st);
+                    drawCanvas.myCanvas.Strokes.Add(st.Clone());
                 }
                 IsDrawing = false;
-                StreamResourceInfo sri = Application.GetResourceStream(new Uri("resource/unselected_pointer.cur", UriKind.Relative));
+                StreamResourceInfo sri = Application.GetResourceStream(new Uri("pack://application:,,,/Resources/PointerImage/unselected_pointer.cur", UriKind.RelativeOrAbsolute));
                 Cursor customCursor = new Cursor(sri.Stream);
-                DrawCanvas.myCanvas.Cursor = customCursor;
+                drawCanvas.myCanvas.Cursor = customCursor;
             }
             //笔触记录
 
-            DrawCanvas.strokeList.Add(theNumberOfStrokIndex);
+            drawCanvas.strokeList.Add(theNumberOfStrokIndex);
         }
 
-        private void inkcanvas_StrokeErased(object sender,RoutedEventArgs e)
-        {
-            //if(theNumberOfStrokIndex==0)
-            //{
-            //    //
-            //}
-            ////笔触数大于0
-            //else if(theNumberOfStrokIndex>0)
-            //{
-            //    theNumberOfStrokIndex--;
-            //    //若笔触数为0时 clear strkelist
-            //    if(theNumberOfStrokIndex==0)
-            //    {
-            //        DrawCanvas.strokeList.Clear();
-            //    }
-            //    else
-            //    {
-            //        //该笔画的笔触数相应 -1
-            //        DrawCanvas.strokeList[DrawCanvas.strokeList.Count - 1]--;
-            //        //如果笔画数大于1  则需要判断前笔画的最后笔触是否恰好为后笔画的起始笔触
-            //        if (DrawCanvas.strokeList.Count > 1)
-            //        {
-            //            if (DrawCanvas.strokeList[DrawCanvas.strokeList.Count - 1] == DrawCanvas.strokeList[DrawCanvas.strokeList.Count - 2])
-            //            {
-            //                DrawCanvas.strokeList.RemoveAt(DrawCanvas.strokeList.Count - 1);
-            //            }
-            //        }
-            //    }
-            //}
-        }
+        
+        
     }
  
 }
